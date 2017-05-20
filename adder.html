@@ -1,0 +1,77 @@
+<html>
+<head>
+	<title>Surge Management</title>
+</head>
+
+<body>
+	Check all that apply:<br><br>
+	<div>
+		<input type="checkbox" onchange="calculate()" id="20arrivals"> 20 or more arrivals in three hours <br><br>
+		<input type="checkbox" onchange="calculate()" id="175arrivals"> 175 or more pt arrivals by 1pm <br><br>
+		<input type="checkbox" onchange="calculate()" id="5beds" value=10> 5 or more admissions without assigned beds <br><br>
+		<input type="checkbox" onchange="calculate()" id="5lessbeds" value=15> 5 or fewer ICU beds (not including CTIC or ICCU*) <br><br>
+		<input type="checkbox" onchange="calculate()" id="25waiting" value=10> 25 or more waiting (ambulance & public) <br><br>
+		<input type="checkbox" onchange="calculate()" id="wait" value=5> longest wait 2.5 hours (ambulance or public) <br><br>
+		<input type="checkbox" onchange="calculate()" id="5esi" value=5> 5 or more ESI 2 not bedded* <br><br>
+		<input type="checkbox" onchange="calculate()" id="10patients" value=10> 10 or more critical care patients* <br>
+	</div>
+	<br><br>
+	<div id="result" style="margin:auto; border-style: solid; border-color: green; border-radius:6px;">
+		
+	</div>
+
+	<script>
+
+		var text = [["Communication with Nursing supervisor about bed status and ED condition. Continue daily operations Reassess in 2 hours","Nursing supervisor provide bed status and projected discharges. Reassess in 2 hours","Continue daily operations","Continue daily operations",""],
+					["Hold Inpatients in G pod. Receive Inpatient RN Place LPN in public or ED PCT 2 to place IV’s in triage. Add additional PCT’s to CC or pods. Receive PCA’s from in house or utilize sec’s who are credentialed.","Provide Inpatient RN. Deploy Housekeeping and transport when needed.","Continue daily operations","Continue daily operations","Every 3-4 hours"],
+					["Call Clinical Manager or Director<br>1. Call Crisis management pool<br>2. Move any Discharges into hallway chairs outside room<br>3. Place ESI 2’s in beds<br>4. Consider seeing more acute patients in the vertical model adjust ratio’s to 5:1<br>5. ED Triage MD will place orders on ambulance triage patients<br>6. Repeat Vital signs on patients in waiting room >2 hrs<br>7.Activate Emergency supply cart and open DI hold area as a care area<br>8.Utilize beds 4 and 5 on A side as 'Critical Care beds'<br>9. Utilize A pod for more acute patients<br>10. Consider changing acuity of patients seen in C pod changing ratio 4:1 for RN’s<br>11. Move Fast track to beds 13 and 14 in C pod-team based care with aggressive use of C pod waiting room.<br>12. Order meals & Inpatient beds","Call Admin Director. Implement Code Help<br>1. Hallway beds<br>2. Once a room is vacant and the bed is assigned, the Unit Assistant from that floor will go to the ED to retrieve the patient. This is not necessary in the PACU as they have their own transporters.<br>3. The Hospitality Center is to be maximized. The only ineligible patients are those on isolation.<br>4. All telemetry patients are to be reviewed for appropriateness of order.<br>5. All Psych COs are to be reviewed for medical clearance and transfer to IP psych.<br>6. CTIC will not move patients to ICTU without the approval of their Director.","Nursing Sup to call Express Care<br>1. Express care should limit acceptances to areas that are at or near capacity.<br>2. When Medicine (IMIS/UMA) is in Code Black Express care will limit inpatient to inpatient transfers<br>3. Express care will try not to accept patients who need an ICU bed to the ED if ED is full and CC is at capacity","Continue daily operations","Every 2 hours"],
+					["Diversion in full effect","","Only accepting Trauma, Burns, ELVO’s, STEMI’s and neurosurgical emergencies","Update HCS, with leadership from ED","Every 4 hours"]];
+
+		var arrivals1 = document.getElementById("20arrivals");
+		var arrivals2 = document.getElementById("175arrivals");
+		var box3 = document.getElementById("5beds");
+		var box4 = document.getElementById("5lessbeds");
+		var box5 = document.getElementById("25waiting");
+		var box6 = document.getElementById("wait");
+		var box7 = document.getElementById("5esi");
+		var box8 = document.getElementById("10patients");
+
+		var result = document.getElementById("result");
+
+		var style = "margin:auto; border-style: solid; border-radius:6px;";
+
+		function calculate(){
+			var sum = 0;
+			if(arrivals1.checked || arrivals2.checked){
+				sum+=10;
+			}
+			
+			sum += parseInt(box3.value)*box3.checked;
+			sum += parseInt(box4.value)*box4.checked;
+			sum += parseInt(box5.value)*box5.checked;
+			sum += parseInt(box6.value)*box6.checked;
+			sum += parseInt(box7.value)*box7.checked;
+			sum += parseInt(box8.value)*box8.checked;
+
+			console.log(sum);
+			var index = 0;
+			if(sum < 20){
+				result.style = style+"border-color: green;";
+				index = 0;
+			}else if(sum < 40){
+				result.style = style+"border-color: yellow;";
+				index = 1;
+			}else if(sum < 60){
+				result.style = style+"border-color: red;";
+				index = 2;
+			}else{
+				result.style = style+"border-color: black;";
+				index = 3;
+			}
+
+			str = text[index][0]+"<hr>"+text[index][1]+"<hr>"+text[index][2]+"<hr>"+text[index][3];
+			result.innerHTML = str;
+		}
+	</script>
+</body>
+</html>

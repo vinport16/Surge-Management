@@ -1,0 +1,18 @@
+{
+  "name": "dad_proj",
+  "version": "1.0.0",
+  "description": "project for dad",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "dad"
+  ],
+  "author": "vincent",
+  "license": "MIT",
+  "dependencies": {
+    "express": "latest",
+    "http": "latest"
+  }
+}

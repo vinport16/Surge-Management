@@ -10,6 +10,10 @@
   "keywords": [
     "dad"
   ],
+  "engines": {
+    "node": "6.9.1",
+    "npm": "4.5.0"
+  },
   "author": "vincent",
   "license": "MIT",
   "dependencies": {

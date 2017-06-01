@@ -15,7 +15,9 @@
     "npm": "4.5.0",
     "socket.io": "1.7.2",
     "yamljs": "0.2.10",
-    "fs": "0.0.1"
+    "fs": "0.0.1",
+    "body-parser": "*",
+    "http": "*"
   },
   "author": "vincent",
   "license": "MIT",

@@ -12,18 +12,17 @@
   ],
   "engines": {
     "node": "6.9.1",
-    "npm": "4.5.0",
-    "socket.io": "2.0.2",
-    "yamljs": "0.2.10",
-    "fs": "0.0.1",
-    "body-parser": "*",
-    "http": "*"
+    "npm": "4.5.0"
   },
   "author": "vincent",
   "license": "MIT",
   "dependencies": {
     "express": "latest",
     "http": "latest",
-    "socket.io": "^2.0.2"
+    "socket.io": "^2.0.2",
+    "yamljs": "latest",
+    "fs": "latest",
+    "body-parser": "latest",
+    "http": "latest"
   }
 }

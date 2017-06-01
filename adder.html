@@ -4,23 +4,49 @@
 </head>
 
 <body>
-	Check all that apply:<br><br>
+	<div style="float:right">
+		<input type="button" onclick="saveLog()" value="Save to Log">
+		
+		<form method="post" action="/data">
+			<input type='password' style="width:0; visibility:hidden" name="pass" value="password">
+			<button type="submit" value="Submit"> View Log
+    	</form>
+	</div>
+	<br><br>
 	<div>
-		<input type="checkbox" onchange="calculate()" id="20arrivals"> 20 or more arrivals in three hours <br><br>
-		<input type="checkbox" onchange="calculate()" id="175arrivals"> 175 or more pt arrivals by 1pm <br><br>
-		<input type="checkbox" onchange="calculate()" id="5beds" value=10> 5 or more admissions without assigned beds <br><br>
-		<input type="checkbox" onchange="calculate()" id="5lessbeds" value=15> 5 or fewer ICU beds (not including CTIC or ICCU*) <br><br>
-		<input type="checkbox" onchange="calculate()" id="25waiting" value=10> 25 or more waiting (ambulance & public) <br><br>
-		<input type="checkbox" onchange="calculate()" id="wait" value=5> longest wait 2.5 hours (ambulance or public) <br><br>
-		<input type="checkbox" onchange="calculate()" id="5esi" value=5> 5 or more ESI 2 not bedded* <br><br>
-		<input type="checkbox" onchange="calculate()" id="10patients" value=10> 10 or more critical care patients* <br>
+		<input type="number" onchange="calculate()" id="20arrivals"> number of arrivals in three hours <br><br> <!-- 20 or more -->
+
+		<input type="number" onchange="calculate()" id="175arrivals"> number of pt arrivals by 1pm <br><br> <!-- 175 or more -->
+
+		<input type="number" onchange="calculate()" id="5beds" > number of admissions without assigned beds <br><br> <!-- 5 or more -->
+
+		<input type="number" onchange="calculate()" id="5lessbeds" > number of ICU beds (not including CTIC or ICCU*) <br><br> <!-- 5 or less -->
+
+		<input type="number" onchange="calculate()" id="25waiting" > number of people waiting (ambulance & public) <br><br> <!-- 25 or more -->
+
+		<input type="number" onchange="calculate()" id="wait" step=0.1> longest wait (hours) (ambulance or public) <br><br> <!-- 2.5 hours or more -->
+
+		<input type="number" onchange="calculate()" id="5esi" > number of ESI 2 not bedded* <br><br> <!-- 5 or more -->
+
+		<input type="number" onchange="calculate()" id="10patients" > number of critical care patients* <br> <!-- 10 or more -->
+
 	</div>
 	<br><br>
 	<div id="result" style="margin:auto; border-style: solid; border-color: green; border-radius:6px;">
 		
 	</div>
 
+
+
+
+
+
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+
 	<script>
+		var socket = io();
 
 		var text = [["Communication with Nursing supervisor about bed status and ED condition. Continue daily operations Reassess in 2 hours","Nursing supervisor provide bed status and projected discharges. Reassess in 2 hours","Continue daily operations","Continue daily operations",""],
 					["Hold Inpatients in G pod. Receive Inpatient RN Place LPN in public or ED PCT 2 to place IV’s in triage. Add additional PCT’s to CC or pods. Receive PCA’s from in house or utilize sec’s who are credentialed.","Provide Inpatient RN. Deploy Housekeeping and transport when needed.","Continue daily operations","Continue daily operations","Every 3-4 hours"],
@@ -36,42 +62,72 @@
 		var box7 = document.getElementById("5esi");
 		var box8 = document.getElementById("10patients");
 
+		var data = {box1:arrivals1.value,
+					box2:arrivals2.value,
+					box3:box3.value,
+					box4:box4.value,
+					box5:box5.value,
+					box6:box6.value,
+					box7:box7.value,
+					box8:box8.value,
+					code:null};
+
 		var result = document.getElementById("result");
 
 		var style = "margin:auto; border-style: solid; border-radius:6px;";
 
 		function calculate(){
 			var sum = 0;
-			if(arrivals1.checked || arrivals2.checked){
+			if(arrivals1.value > 19 || arrivals2.value > 174){
 				sum+=10;
 			}
 			
-			sum += parseInt(box3.value)*box3.checked;
-			sum += parseInt(box4.value)*box4.checked;
-			sum += parseInt(box5.value)*box5.checked;
-			sum += parseInt(box6.value)*box6.checked;
-			sum += parseInt(box7.value)*box7.checked;
-			sum += parseInt(box8.value)*box8.checked;
+			sum += (parseInt(box3.value) > 4)*10;
+			sum += (parseInt(box4.value) < 6)*15;
+			sum += (parseInt(box5.value) > 24)*10;
+			sum += (parseInt(box6.value) > 2.49)*5;
+			sum += (parseInt(box7.value) > 4)*5;
+			sum += (parseInt(box8.value) > 9)*10;
+
+			data.box1 = arrivals1.value;  //update info in data
+			data.box2 = arrivals2.value;
+			data.box3 = box3.value;
+			data.box4 = box4.value;
+			data.box5 = box5.value;
+			data.box6 = box6.value;
+			data.box7 = box7.value;
+			data.box8 = box8.value;
 
 			console.log(sum);
 			var index = 0;
 			if(sum < 20){
 				result.style = style+"border-color: green;";
 				index = 0;
+				data.code = {total:sum, color:"green"};
 			}else if(sum < 40){
 				result.style = style+"border-color: yellow;";
 				index = 1;
+				data.code = {total:sum, color:"yellow"};
 			}else if(sum < 60){
 				result.style = style+"border-color: red;";
 				index = 2;
+				data.code = {total:sum, color:"red"};
 			}else{
 				result.style = style+"border-color: black;";
 				index = 3;
+				data.code = {total:sum, color:"black"};
 			}
 
 			str = text[index][0]+"<hr>"+text[index][1]+"<hr>"+text[index][2]+"<hr>"+text[index][3];
 			result.innerHTML = str;
 		}
+
+		function saveLog(){
+			if(confirm("Confirm Save")){
+				socket.emit('saveLog', data);
+			}
+		}
+		
 	</script>
 </body>
 </html>

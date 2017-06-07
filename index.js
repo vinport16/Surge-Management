@@ -72,7 +72,6 @@ app.post('/data', function(req, res){
 
 io.on("connection", function(socket){
 	socket.on("saveLog", function(data){
-		data.date = Date().toLocaleString("en-US", {timeZone: "America/New_York"});
 
 		fs.readFile(file, 'utf8', function (err, filedata) {
             if (err) throw err;

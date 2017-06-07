@@ -70,7 +70,8 @@
 					box6:box6.value,
 					box7:box7.value,
 					box8:box8.value,
-					code:null};
+					code:null,
+					date:null};
 
 		var result = document.getElementById("result");
 
@@ -117,7 +118,8 @@
 				index = 3;
 				data.code = {total:sum, color:"black"};
 			}
-
+			data.date = Date();
+			
 			str = text[index][0]+"<hr>"+text[index][1]+"<hr>"+text[index][2]+"<hr>"+text[index][3];
 			result.innerHTML = str;
 		}
@@ -127,7 +129,7 @@
 				socket.emit('saveLog', data);
 			}
 		}
-		
+
 	</script>
 </body>
 </html>

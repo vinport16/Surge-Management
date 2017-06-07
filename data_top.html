@@ -1,0 +1,48 @@
+<html>
+<head>
+	<title>Data</title>
+	<style>
+		table {
+  			border-collapse: collapse;
+		}
+		th.rotate {
+			/* Something you can count on */
+			height: 150px;
+			white-space: nowrap;
+		}
+
+		th.rotate > div {
+			transform: 
+			/* Magic Numbers */
+			translate(35px, 51px)
+			/* 45 is really 360 - 45 */
+			rotate(315deg);
+			width: 40px;
+		}
+		th.rotate > div > span {
+			border-bottom: 1px solid #000;
+			padding: 5px 10px;
+		}
+		td {
+   	 		text-align: center;
+    		padding: 10px 5px;
+    		border: 1px solid #000;
+    		min-width: 40px;
+    	}
+	</style>
+</head>
+<body bgcolor=BBBBBB>
+	<div style="height:20%"></div>
+	<table>
+		<tr>
+			<th class='rotate'><div><span>Date</span></div></th>
+			<th class='rotate'><div><span>number of arrivals in three hours</span></div></th>
+			<th class='rotate'><div><span>number of pt arrivals by 1pm</span></div></th>
+			<th class='rotate'><div><span>number of admissions without assigned beds</span></div></th>
+			<th class='rotate'><div><span>number of ICU beds (not including CTIC or ICCU*)</span></div></th>
+			<th class='rotate'><div><span>number of people waiting (ambulance & public)</span></div></th>
+			<th class='rotate'><div><span>longest wait (hours) (ambulance or public)</span></div></th>
+			<th class='rotate'><div><span>number of ESI 2 not bedded*</span></div></th>
+			<th class='rotate'><div><span>number of critical care patients*</span></div></th>
+			<th class='rotate'><div><span>code number value</span></div></th>
+		</tr>

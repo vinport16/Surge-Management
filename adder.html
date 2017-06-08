@@ -3,7 +3,7 @@
 	<title>Surge Management</title>
 </head>
 
-<body>
+<body bgcolor="CCDDEE">
 	<div style="float:right">
 		<input type="button" onclick="saveLog()" value="Save to Log">
 		
@@ -75,7 +75,9 @@
 
 		var result = document.getElementById("result");
 
-		var style = "margin:auto; border-style: solid; border-radius:6px;";
+		var style = "margin:auto; padding:5px; border-style: solid; border-width:5px; border-radius:6px; background-color:DDEEFF;";
+		
+		calculate();
 
 		function calculate(){
 			var sum = 0;
@@ -119,7 +121,7 @@
 				data.code = {total:sum, color:"black"};
 			}
 			data.date = Date();
-			
+
 			str = text[index][0]+"<hr>"+text[index][1]+"<hr>"+text[index][2]+"<hr>"+text[index][3];
 			result.innerHTML = str;
 		}

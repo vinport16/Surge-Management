@@ -12,3 +12,7 @@ This application
 - stores inputted data
 
 - displays data in a compact and orderly way
+
+- allows users to download data in .CSV file
+
+- autopopulates values when convenient

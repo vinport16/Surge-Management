@@ -46,7 +46,7 @@ app.post('/adder', function(req, res){
 });
 
 app.post('/data', function(req, res){  //construct data table HTML
-	if(req.body.pass = pw){  //check password again
+	if(req.body.pass == pw){  //check password again
 
 		var html = "";
 
@@ -134,45 +134,56 @@ io.on("connection", function(socket){ //Save data entry to file
 		});
 	});
 
-	app.get('/download', function(req, res){
+	app.post('/download', function(req, res){  // download .csv file of data
+		console.log(req.body.pass);
+		if(req.body.pass == pw){  //check password again
+			var name = "generated.csv";
 
-		var name = "generated.csv";
+			var text =
+			"date, "+
+			"AM hospital census, "+
+			"arrivals in three hours, "+
+			"pt arrivals by 1pm, "+
+			"admissions without assigned beds, "+
+			"ICU beds (not including CTIC or ICCU*), "+
+			"people waiting (ambulance & public), "+
+			"longest wait (hours) (ambulance or public), "+
+			"ESI 2 not bedded*, "+
+			"critical care patients*, "+
+			"code, "+
+			"color,\n";
 
-		var text = "date, AM hospital census, arrivals in three hours, pt arrivals by 1pm, admissions without assigned beds, ICU beds (not including CTIC or ICCU*), people waiting (ambulance & public), longest wait (hours) (ambulance or public), ESI 2 not bedded*, critical care patients*, code, color,\n";
-
-		fs.readFile(file, 'utf8', function (err, filedata) { //read YAML file
-			if (err) throw err;
-			var content = YAML.parse(filedata);
-
-			if(content == null){
-				content = [];
-			}
-
-			for(var i = content.length-1; i >= 0; i--){
-				text += content[i].date+", "+
-						content[i].box0+", "+
-						content[i].box1+", "+
-						content[i].box2+", "+
-						content[i].box3+", "+
-						content[i].box4+", "+
-						content[i].box5+", "+
-						content[i].box6+", "+
-						content[i].box7+", "+
-						content[i].box8+", "+
-						content[i].code.total+", "+
-						content[i].code.color+", \n";
-			}
-
-			fs.writeFile ("generated.csv", text, function(err) { //write data back into file
+			fs.readFile(file, 'utf8', function (err, filedata) { //read YAML file
 				if (err) throw err;
-				var file = __dirname + '/generated.csv';
-				res.download(file);
-				//var filestream = fs.createReadStream(file);
-				//filestream.pipe(res);
+				var content = YAML.parse(filedata);
+
+				if(content == null){
+					content = [];
+				}
+
+				for(var i = content.length-1; i >= 0; i--){
+					text += content[i].date+", "+
+					content[i].box0+", "+
+					content[i].box1+", "+
+					content[i].box2+", "+
+					content[i].box3+", "+
+					content[i].box4+", "+
+					content[i].box5+", "+
+					content[i].box6+", "+
+					content[i].box7+", "+
+					content[i].box8+", "+
+					content[i].code.total+", "+
+					content[i].code.color+", \n";
+				}
+
+				fs.writeFile ("generated.csv", text, function(err) { //write data back into file
+					if (err) throw err;
+					var file = __dirname + '/generated.csv';
+					res.download(file);			// here's where the download happens
+				});
+
 			});
-
-		});
-
+		}
 		
 	});
 

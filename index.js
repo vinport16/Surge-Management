@@ -9,14 +9,17 @@ var io = sio(http);
 var port = process.env.PORT || 8080; //runs on heroku or localhost:8080
 
 var pw = "password";
+
 //listen for port
 http.listen(port);
 
 var file = "db.txt";
+
 app.use(bodyparser.urlencoded({  //for reading forms
 	extended: true
 }));
 app.use(bodyparser.json());
+
 
 fs.stat(file, function(err, stat) {
 	if(err == null) {
@@ -33,16 +36,17 @@ app.get('/', function(req, res){ //when someone connects initially, send the ind
 	res.sendFile(__dirname + '/index.html');
 });
 
+
 app.post('/adder', function(req, res){
-	if(req.body.pass == pw){
+	if(req.body.pass == pw){  //check password
 		res.sendFile(__dirname + '/adder.html');
 	}else{
 		res.send("incorrect password");
 	}
 });
 
-app.post('/data', function(req, res){
-	if(req.body.pass = pw){
+app.post('/data', function(req, res){  //construct data table HTML
+	if(req.body.pass = pw){  //check password again
 
 		var html = "";
 
@@ -87,10 +91,11 @@ app.post('/data', function(req, res){
 	}
 });
 
-io.on("connection", function(socket){
+io.on("connection", function(socket){ //Save data entry to file
+
 	socket.on("saveLog", function(data){
 
-		fs.readFile(file, 'utf8', function (err, filedata) {
+		fs.readFile(file, 'utf8', function (err, filedata) { //read YAML file
 			if (err) throw err;
 			var content = YAML.parse(filedata);
 
@@ -103,9 +108,9 @@ io.on("connection", function(socket){
 			}else{
 				content.push(data);
 
-				filedata = YAML.stringify(content, 2);
+				filedata = YAML.stringify(content, 2);  
 
-				fs.writeFile (file, filedata, function(err) {
+				fs.writeFile (file, filedata, function(err) { //write data back into file
 					if (err) throw err;
 					console.log('data written to file '+data.date);
 				});
@@ -114,4 +119,19 @@ io.on("connection", function(socket){
 		});
 
 	});
+
+	socket.on("census",function(){
+		fs.readFile(file, 'utf8', function (err, filedata) { //read YAML file
+			if (err) throw err;
+			var content = YAML.parse(filedata);
+
+			if(content != null){
+				if(Date().substring(0,10) === content[content.length-1].date.substring(0,10)){
+					socket.emit("census",content[content.length-1].box0);
+				}
+			}
+			
+		});
+	});
+
 });

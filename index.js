@@ -45,6 +45,7 @@ app.post('/adder', function(req, res){
 	}
 });
 
+
 app.post('/data', function(req, res){  //construct data table HTML
 	if(req.body.pass == pw){  //check password again
 
@@ -62,19 +63,65 @@ app.post('/data', function(req, res){  //construct data table HTML
 				if (err) throw err;
 				html+=filetext;
 
+				html += "<tr>";
 				for(var i = content.length-1; i >= 0; i--){
-					html += "<tr style='color:"+content[i].code.color+"'> <td> "+content[i].date+" </td>"+
-							"<td> "+content[i].box1+" </td> "+
-							"<td> "+content[i].box2+" </td> "+
-							"<td> "+content[i].box3+" </td> "+
-							"<td> "+content[i].box4+" </td> "+
-							"<td> "+content[i].box5+" </td> "+
-							"<td> "+content[i].box6+" </td> "+
-							"<td> "+content[i].box7+" </td> "+
-							"<td> "+content[i].box8+" </td> "+
-							"<td> "+content[i].code.total+" </td> "+
-							"</tr>";
+					html += "<th class='rotate'><div style='color:"+content[i].code.color+"'><span>"+content[i].date+"</span></div></th>";
 				}
+				html += "</tr><tr>";
+
+				for(var i = content.length-1; i >= 0; i--){
+					html += "<td>"+content[i].box0+"</td>";
+				}
+				html += "</tr><tr>";
+
+				for(var i = content.length-1; i >= 0; i--){
+					html += "<td>"+content[i].box1+"</td>";
+				}
+				html += "</tr><tr>";
+				
+				for(var i = content.length-1; i >= 0; i--){
+					html += "<td>"+content[i].box2+"</td>";
+				}
+				html += "</tr><tr>";
+				
+				for(var i = content.length-1; i >= 0; i--){
+					html += "<td>"+content[i].box3+"</td>";
+				}
+				html += "</tr><tr>";
+				
+				for(var i = content.length-1; i >= 0; i--){
+					html += "<td>"+content[i].box4+"</td>";
+				}
+				html += "</tr><tr>";
+				
+				for(var i = content.length-1; i >= 0; i--){
+					html += "<td>"+content[i].box5+"</td>";
+				}
+				html += "</tr><tr>";
+				
+				for(var i = content.length-1; i >= 0; i--){
+					html += "<td>"+content[i].box6+"</td>";
+				}
+				html += "</tr><tr>";
+				
+				for(var i = content.length-1; i >= 0; i--){
+					html += "<td>"+content[i].box7+"</td>";
+				}
+				html += "</tr><tr>";
+				
+				for(var i = content.length-1; i >= 0; i--){
+					html += "<td>"+content[i].box8+"</td>";
+				}
+				html += "</tr><tr>";
+
+				for(var i = content.length-1; i >= 0; i--){
+					html += "<td>"+content[i].code.total+"</td>";
+				}
+				html += "</tr><tr>";
+				
+				
+
+
 
 				fs.readFile("data_bottom.html", 'utf8', function(err, filetext){
 					if (err) throw err;

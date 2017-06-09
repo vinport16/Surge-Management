@@ -130,8 +130,50 @@ io.on("connection", function(socket){ //Save data entry to file
 					socket.emit("census",content[content.length-1].box0);
 				}
 			}
-			
+
 		});
+	});
+
+	app.get('/download', function(req, res){
+
+		var name = "generated.csv";
+
+		var text = "date, AM hospital census, arrivals in three hours, pt arrivals by 1pm, admissions without assigned beds, ICU beds (not including CTIC or ICCU*), people waiting (ambulance & public), longest wait (hours) (ambulance or public), ESI 2 not bedded*, critical care patients*, code, color,\n";
+
+		fs.readFile(file, 'utf8', function (err, filedata) { //read YAML file
+			if (err) throw err;
+			var content = YAML.parse(filedata);
+
+			if(content == null){
+				content = [];
+			}
+
+			for(var i = content.length-1; i >= 0; i--){
+				text += content[i].date+", "+
+						content[i].box0+", "+
+						content[i].box1+", "+
+						content[i].box2+", "+
+						content[i].box3+", "+
+						content[i].box4+", "+
+						content[i].box5+", "+
+						content[i].box6+", "+
+						content[i].box7+", "+
+						content[i].box8+", "+
+						content[i].code.total+", "+
+						content[i].code.color+", \n";
+			}
+
+			fs.writeFile ("generated.csv", text, function(err) { //write data back into file
+				if (err) throw err;
+				var file = __dirname + '/generated.csv';
+				res.download(file);
+				//var filestream = fs.createReadStream(file);
+				//filestream.pipe(res);
+			});
+
+		});
+
+		
 	});
 
 });

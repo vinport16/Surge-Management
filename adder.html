@@ -9,6 +9,7 @@
 			font-family:"Arial";
 		}
 	</style>
+
 </head>
 
 <body bgcolor="CCDDEE">
@@ -127,19 +128,19 @@
 			console.log(sum);
 			var index = 0;
 			if(sum < 20){
-				result.style = style+"border-color: green;";
+				$('#result').css("border-color","green");
 				index = 0;
 				data.code = {total:sum, color:"green"};
 			}else if(sum < 40){
-				result.style = style+"border-color: yellow;";
+				$('#result').css("border-color","yellow");
 				index = 1;
 				data.code = {total:sum, color:"yellow"};
 			}else if(sum < 70){
-				result.style = style+"border-color: red;";
+				$('#result').css("border-color","red");
 				index = 2;
 				data.code = {total:sum, color:"red"};
 			}else{
-				result.style = style+"border-color: black;";
+				$('#result').css("border-color","black");
 				index = 3;
 				data.code = {total:sum, color:"black"};
 			}

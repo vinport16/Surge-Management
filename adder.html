@@ -3,7 +3,16 @@
 	<title>Surge Management</title>
 	<style>
 		input{
-			width:40px;
+			width:30px;
+		}
+		input::-webkit-outer-spin-button,
+		input::-webkit-inner-spin-button {
+    		/* display: none; <- Crashes Chrome on hover */
+		    -webkit-appearance: none;
+    		margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+		}
+		input.number{
+			
 		}
 		body{
 			font-family:"Arial";
@@ -24,29 +33,37 @@
     			socket.emit('delete');
     		}
     	">Delete last input</button>
+    	<br><br>
+    	<form method="POST" action="/contacts" style="">
+			<input type='password' style="width:0; visibility:hidden" name="pass" value="password">
+			<button type="submit" value="Submit" style="height:30px"> Edit contact info </button>
+    	</form>
 	</div>
 	<br><br>
 	<div>
-		<input type="number" onchange="calculate()" id="census"><br> AM hospital census <hr> <!-- 540 or more -->
+		<input type="number" min="0" id="census"><br> AM hospital census <hr> <!-- 540 or more -->
 
-		<input type="number" onchange="calculate()" id="20arrivals"><br> number of arrivals in three hours <hr> <!-- 20 or more -->
+		<input type="number" min="0" id="20arrivals"><br> number of arrivals in three hours <hr> <!-- 20 or more -->
 
-		<input type="number" onchange="calculate()" id="175arrivals"><br> number of pt arrivals by 1pm <hr> <!-- 175 or more -->
+		<input type="number" min="0" id="175arrivals"><br> number of pt arrivals by 1pm <hr> <!-- 175 or more -->
 
-		<input type="number" onchange="calculate()" id="5beds" ><br> number of admissions without assigned beds <hr> <!-- 5 or more -->
+		<input type="number" min="0" id="5beds" ><br> number of admissions without assigned beds <hr> <!-- 5 or more -->
 
-		<input type="number" onchange="calculate()" id="5lessbeds" ><br> number of ICU beds (not including CTIC or ICCU*) <hr> <!-- 5 or less -->
+		<input type="number" min="0" id="5lessbeds" ><br> number of ICU beds (not including CTIC or ICCU*) <hr> <!-- 5 or less -->
 
-		<input type="number" onchange="calculate()" id="25waiting" ><br> number of people waiting (ambulance & public) <hr> <!-- 25 or more -->
+		<input type="number" min="0" id="25waiting" ><br> number of people waiting (ambulance & public) <hr> <!-- 25 or more -->
 
-		<input type="number" onchange="calculate()" id="wait" step=0.1><br> longest wait (hours) (ambulance or public) <hr> <!-- 2.5 hours or more -->
+		<input type="number" min="0" id="wait" step=0.1><br> longest wait (hours) (ambulance or public) <hr> <!-- 2.5 hours or more -->
 
-		<input type="number" onchange="calculate()" id="5esi" ><br> number of ESI 2 not bedded* <hr> <!-- 5 or more -->
+		<input type="number" min="0" id="5esi" ><br> number of ESI 2 not bedded* <hr> <!-- 5 or more -->
 
-		<input type="number" onchange="calculate()" id="10patients" ><br> number of critical care patients* <hr><br> <!-- 10 or more -->
+		<input type="number" min="0" id="10patients" ><br> number of critical care patients* <hr><br> <!-- 10 or more -->
 
 	</div>
 	<div style="width: 10%">
+		<button onclick="calculate()" style="height:30px"> Calculate
+		</button>
+		<br><br>
 		<button onclick="saveLog()" style="height:30px"> Save to Log
 		</button>
 		<br><br>

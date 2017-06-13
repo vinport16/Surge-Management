@@ -25,6 +25,12 @@ pg.connect(connectionString, function(err, client, done) {
   });
 });
 
+pg.connect(connectionString, function(err, client, done) {
+  client.query('CREATE TABLE IF NOT EXISTS contacts(id SERIAL PRIMARY KEY, email VARCHAR(60) not null, green BOOLEAN, yellow BOOLEAN, red BOOLEAN, black BOOLEAN, remind BOOLEAN)', function(err, result) {
+    done();
+  });
+});
+
 app.use(bodyparser.urlencoded({  //for reading forms
 	extended: true
 }));
@@ -156,8 +162,23 @@ io.on("connection", function(socket){ //Save data entry to db
 
 	});
 
+	socket.on("contact_req", function(req, res){
+		get_contacts(function(dat){
+			socket.emit("contact_info", dat);
+		});
+	});
+
+	socket.on("contact_update", function(contacts){
+		rewrite_contacts(contacts);
+	});
+
+	app.post('/contacts', function(req, res){ 
+		if(req.body.pass == pw){  //check password again
+			res.sendFile(__dirname + '/contact_prefs.html');
+		}
+	});
+
 	app.post('/download', function(req, res){  // download .csv file of data
-		console.log(req.body.pass);
 		if(req.body.pass == pw){  //check password again
 			var name = "generated.csv";
 
@@ -247,4 +268,44 @@ delete_last_entry = function(){
 			if (err) console.log("Error: " + err);
 		});
 	});
+}
+
+function get_contacts(callback){
+	pg.connect(connectionString, function(err, client, done) {
+    	client.query('SELECT * FROM contacts', function(err, result) {
+      		done();
+      		if (err)
+       			{ console.log("Error " + err); }
+      		else{
+      			callback(result.rows);
+      		}
+   		});
+  	});
+}
+
+rewrite_contacts = function(data){
+  pg.connect(connectionString, function(err, client, done) {
+  	client.query("DELETE FROM contacts;", function(err, result){
+  		if(err){
+  			console.log(err);
+  		}else{
+  			data = JSON.parse(data);
+  			for(var i = 0; i < data.length; i++){
+  				client.query("INSERT INTO contacts (email, green, yellow, red, black, remind) VALUES ('"+data[i].email+"', "+
+    				data[i].green+", "+
+    				data[i].yellow+", "+
+    				data[i].red+", "+
+    				data[i].black+", "+
+    				data[i].remind+");", function(err, result) {
+     			 	done();
+     			 if (err)
+     			  	{ console.log("Error " + err); }
+			    });
+  			}
+  		}
+  	});
+
+  	
+    
+  });
 }

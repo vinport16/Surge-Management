@@ -157,6 +157,9 @@ io.on("connection", function(socket){ //Save data entry to db
 	socket.on("census",function(){
 		get_db(function(content){
 			if(content != []){
+				console.log(content);
+				console.log();
+				console.log(content[0]);
 				if(Date().substring(0,10) === content[content.length-1].date.substring(0,10)){
 					socket.emit("census",content[content.length-1].box0);
 				}

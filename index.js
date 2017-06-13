@@ -25,19 +25,6 @@ pg.connect(connectionString, function(err, client, done) {
   });
 });
 
-
-app.get('/db', function (request, response) {
-  pg.connect(connectionString, function(err, client, done) {
-    client.query('SELECT * FROM data', function(err, result) {
-      done();
-      if (err)
-       { console.error(err); response.send("Error " + err); }
-      else
-       { response.send( result.rows ); }
-    });
-  });
-});
-
 app.use(bodyparser.urlencoded({  //for reading forms
 	extended: true
 }));
@@ -185,9 +172,6 @@ io.on("connection", function(socket){ //Save data entry to db
 			"color,\n";
 
 			get_db(function(content){
-				if(content == null){
-					content = [];
-				}
 
 				for(var i = content.length-1; i >= 0; i--){
 					text += content[i].date+", "+

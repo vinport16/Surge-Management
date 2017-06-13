@@ -141,6 +141,10 @@ io.on("connection", function(socket){ //Save data entry to db
 
 	});
 
+	socket.on("delete", function(){
+		delete_last_entry();
+	});
+
 	socket.on("census",function(){
 		get_db(function(content){
 			if(content[0] != undefined){
@@ -228,10 +232,19 @@ function get_db(callback){
     client.query('SELECT * FROM data', function(err, result) {
       done();
       if (err)
-       { console.error(err); response.send("Error " + err); }
+       { console.log("Error " + err); }
       else{
       	callback(result.rows);
       }
     });
   });
+}
+
+delete_last_entry = function(){
+	pg.connect(connectionString, function(err, client, done){
+		client.query("DELETE FROM data WHERE id=(SELECT MAX(id) FROM data)", function(err, result){
+			done();
+			if (err) console.log("Error: " + err);
+		});
+	});
 }

@@ -15,10 +15,15 @@
 <body bgcolor="CCDDEE">
 
 	<div style="float:right;">
-		<form method="POST" action="/download">
+		<form method="POST" action="/download" style="">
 			<input type='password' style="width:0; visibility:hidden" name="pass" value="password">
 			<button type="submit" value="Submit" style="height:30px"> Download data </button>
     	</form>
+    	<button style="height:30px;" onclick="
+    		if(confirm('Confirm Delete: all changes are permanent')){
+    			socket.emit('delete');
+    		}
+    	">Delete last input</button>
 	</div>
 	<br><br>
 	<div>

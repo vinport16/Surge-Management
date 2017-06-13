@@ -43,7 +43,7 @@
 	<div>
 		<input type="number" min="0" id="census"><br> AM hospital census <hr> <!-- 540 or more -->
 
-		<input type="number" min="0" id="20arrivals"><br> number of arrivals in three hours <hr> <!-- 20 or more -->
+		<input type="number" min="0" id="20arrivals"><br> number of arrivals in last 3 hours <hr> <!-- 20 or more -->
 
 		<input type="number" min="0" id="175arrivals"><br> number of pt arrivals by 1pm <hr> <!-- 175 or more -->
 
@@ -121,6 +121,11 @@
 		var style = "margin:auto; padding:5px; border-style: solid; border-width:5px; border-radius:6px; background-color:DDEEFF;";
 		
 		calculate();
+
+		if((new Date()).getHours() < 13){
+			arrivals2.disabled = true;
+			arrivals2.value = 0;
+		}
 
 		function calculate(){
 			var sum = 0;

@@ -23,6 +23,7 @@
     "yamljs": "latest",
     "fs": "latest",
     "body-parser": "latest",
-    "http": "latest"
+    "http": "latest",
+    "pg": "latest"
   }
 }

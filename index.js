@@ -170,6 +170,8 @@ io.on("connection", function(socket){ //Save data entry to db
 						body += "ESI 2 not bedded*: "+data.box7+"\n";
 						body += "critical care patients*: "+data.box8;
 
+						body = "See status at https://surge-management.herokuapp.com";
+
 						send_alert(contacts[i].email, level, body);
 					}
 				}
@@ -192,6 +194,33 @@ io.on("connection", function(socket){ //Save data entry to db
 		});
 
 	});
+
+	socket.on("email_report", function(email, report){
+		let transporter = nodemailer.createTransport({
+			service: 'gmail',
+			auth: {
+				user: 'surge.management.robot@gmail.com',
+				pass: 'robotmanagementsurge'
+			}
+		});
+
+  			// setup email data with unicode symbols
+  		let mailOptions = {
+    	from: '"Surge Management Robot" <surge.management.robot@gmail.com>', // sender address
+    	to: email, // list of receivers
+    	subject: 'Surge Management Report', // Subject line
+    	//text: level+' alert\n'+body // plain text body
+    	html: '<b>'+report+'</b>' // html body
+	};
+
+  // send mail with defined transport object
+  transporter.sendMail(mailOptions, (error, info) => {
+  	if (error) {
+  		return console.log(error);
+  	}
+  	console.log('Message to %s sent: %s', addr, info.response);
+  });
+});
 
 	socket.on("contact_req", function(req, res){
 		get_contacts(function(dat){

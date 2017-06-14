@@ -73,6 +73,8 @@
 			<button type="submit" value="Submit" style="height:30px"> View Log </button>
     	</form>
 	</div>
+	<button type='email' onclick="send_email()" style="height:30px;">Email report</button>
+	<br>
 	<br>
 	<div id="result" style="margin:auto; border-style: solid; border-color: green; border-radius:6px;">
 		
@@ -190,6 +192,38 @@
 		socket.on("census", function(num){
 			box1.value=num;
 		});
+
+		function validateEmail(email) { //regex taken from internet, not sure what's going on here
+			var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			return re.test(email); // returns true if email is valid
+		}
+
+		function send_email(){
+			calculate();
+			var email = prompt("Email address:");
+			if(validateEmail(email)){
+				var report = result.innerHTML;
+					report = "alert level: "+data.code.color+" <br><hr>" + report;
+
+				var body = "";
+					body += "AM hospital census: "+data.box0+"<br>";
+					body += "arrivals in three hours: "+data.box1+"<br>";
+					body += "pt arrivals by 1pm: "+data.box2+"<br>";
+					body += "admissions without assigned beds: "+data.box3+"<br>";
+					body += "ICU beds (not including CTIC or ICCU*): "+data.box4+"<br>";
+					body += "people waiting (ambulance & public): "+data.box5+"<br>";
+					body += "longest wait (hours) (ambulance or public): "+data.box6+"<br>";
+					body += "ESI 2 not bedded*: "+data.box7+"<br>";
+					body += "critical care patients*: "+data.box8;
+
+				report = report + "<br><hr>" + body
+
+				socket.emit("email_report", email, report);
+			}else{
+				alert("Invalid email");
+			}
+			
+		}
 
 	</script>
 </body>

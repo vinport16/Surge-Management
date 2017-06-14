@@ -3,7 +3,8 @@
 	<title>Surge Management</title>
 	<style>
 		input{
-			width:30px;
+			width:50px;
+			font-size: 18px;
 		}
 		input::-webkit-outer-spin-button,
 		input::-webkit-inner-spin-button {
@@ -11,9 +12,7 @@
 		    -webkit-appearance: none;
     		margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
 		}
-		input.number{
-			
-		}
+		
 		body{
 			font-family:"Arial";
 		}
@@ -24,19 +23,20 @@
 <body bgcolor="CCDDEE">
 
 	<div style="float:right;">
-		<form method="POST" action="/download" style="">
+		<form method="POST" action="/download" style="float:right;">
 			<input type='password' style="width:0; visibility:hidden" name="pass" value="password">
-			<button type="submit" value="Submit" style="height:30px"> Download data </button>
+			<button type="submit" value="Submit" style="height:30px;"> Download data </button>
     	</form>
-    	<button style="height:30px;" onclick="
+    	<br><br>
+    	<button style="height:30px; float:right;" onclick="
     		if(confirm('Confirm Delete: all changes are permanent')){
     			socket.emit('delete');
     		}
     	">Delete last input</button>
-    	<br><br>
-    	<form method="POST" action="/contacts" style="">
+    	<br><br><br>
+    	<form method="POST" action="/contacts" style="float:right;">
 			<input type='password' style="width:0; visibility:hidden" name="pass" value="password">
-			<button type="submit" value="Submit" style="height:30px"> Edit contact info </button>
+			<button type="submit" value="Submit" style="height:30px"> Edit contact info (admin only)</button>
     	</form>
 	</div>
 	<br><br>

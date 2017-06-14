@@ -10,6 +10,8 @@ Node packages include
 
 - Socket.io
 
+- nodemailer
+
 among others
 
 <h4>Functionality</h4>
@@ -28,4 +30,6 @@ This application
 - autopopulates values when convenient
 
 - keeps a list of contacts and instructions on when to alert them
+
+- alerts contacts through email
 

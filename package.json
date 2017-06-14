@@ -17,12 +17,13 @@
   "author": "vincent",
   "license": "MIT",
   "dependencies": {
-    "express": "latest",
-    "http": "latest",
-    "socket.io": "^2.0.2",
-    "yamljs": "latest",
-    "fs": "latest",
     "body-parser": "latest",
-    "pg": "latest"
+    "express": "latest",
+    "fs": "latest",
+    "http": "latest",
+    "nodemailer": "^4.0.1",
+    "pg": "latest",
+    "socket.io": "^2.0.2",
+    "yamljs": "latest"
   }
 }

@@ -4,6 +4,7 @@ var sio = require('socket.io');
 var YAML = require('yamljs');
 var fs = require('fs');
 var pg = require('pg');
+var nodemailer = require('nodemailer');
 var app = express();
 var http = require('http').createServer(app);
 var io = sio(http);
@@ -143,6 +144,36 @@ io.on("connection", function(socket){ //Save data entry to db
 			console.log("can't log null code data");
 		}else{
 			add_to_db(data);
+			get_contacts(function(contacts){
+				var level = data.code.color;
+				for(var i = 0; i < contacts.length; i++){
+					var send = false;
+					if(contacts[i].green && "green" === level ){
+						send = true;
+					}else if(contacts[i].yellow && "yellow" === level ){
+						send = true;
+					}else if(contacts[i].red && "red" === level ){
+						send = 1==1; // <-- see what I did there
+					}else if(contacts[i].black && "black" === level ){
+						send = true;
+					}
+					if(send){
+						var body = "";
+
+						body += "AM hospital census: "+data.box0+"\n";
+						body += "arrivals in three hours: "+data.box1+"\n";
+						body += "pt arrivals by 1pm: "+data.box2+"\n";
+						body += "admissions without assigned beds: "+data.box3+"\n";
+						body += "ICU beds (not including CTIC or ICCU*): "+data.box4+"\n";
+						body += "people waiting (ambulance & public): "+data.box5+"\n";
+						body += "longest wait (hours) (ambulance or public): "+data.box6+"\n";
+						body += "ESI 2 not bedded*: "+data.box7+"\n";
+						body += "critical care patients*: "+data.box8;
+
+						send_alert(contacts[i].email, level, body);
+					}
+				}
+			});
 		}
 
 	});
@@ -309,3 +340,30 @@ rewrite_contacts = function(data){
     
   });
 }
+
+send_alert = function(addr, level, body){
+  let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'surge.management.robot@gmail.com',
+      pass: 'robotmanagementsurge'
+    }
+  });
+
+  // setup email data with unicode symbols
+  let mailOptions = {
+    from: '"Surge Management Robot" <surge.management.robot@gmail.com>', // sender address
+    to: addr, // list of receivers
+    subject: '', // Subject line
+    text: level+' alert\n'+body // plain text body
+    //html: '<b>Registration for Political Dialogue confirmed.</b>' // html body
+  };
+
+  // send mail with defined transport object
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return console.log(error);
+    }
+    console.log('Message to %s sent: %s', addr, info.response);
+  });
+};

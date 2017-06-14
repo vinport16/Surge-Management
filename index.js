@@ -10,7 +10,7 @@ var http = require('http').createServer(app);
 var io = sio(http);
 var port = process.env.PORT || 8080; //runs on heroku or localhost:8080
 
-var pw = "password";
+var pw = "aec2.0";
 
 //listen for port
 http.listen(port);

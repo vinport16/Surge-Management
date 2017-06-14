@@ -159,18 +159,15 @@ io.on("connection", function(socket){ //Save data entry to db
 					}
 					if(send){
 						var body = "";
-
-						body += "AM hospital census: "+data.box0+"\n";
-						body += "arrivals in three hours: "+data.box1+"\n";
-						body += "pt arrivals by 1pm: "+data.box2+"\n";
-						body += "admissions without assigned beds: "+data.box3+"\n";
-						body += "ICU beds (not including CTIC or ICCU*): "+data.box4+"\n";
-						body += "people waiting (ambulance & public): "+data.box5+"\n";
-						body += "longest wait (hours) (ambulance or public): "+data.box6+"\n";
-						body += "ESI 2 not bedded*: "+data.box7+"\n";
-						body += "critical care patients*: "+data.box8;
-
-						body = "See status at https://surge-management.herokuapp.com";
+							body += "IPD "+data.box0+"\n";
+							body += "arr/3hrs "+data.box1+"\n";
+							body += "arr by 1P "+data.box2+"\n";
+							body += "admits w/o beds "+data.box3+"\n";
+							body += "ICU# "+data.box4+"\n";
+							body += "waiting "+data.box5+"\n";
+							body += "wait "+data.box6+"hrs\n";
+							body += "ESI2 in WR "+data.box7+"\n";
+							body += "ED CC # "+data.box8;
 
 						send_alert(contacts[i].email, level, body);
 					}

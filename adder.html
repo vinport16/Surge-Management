@@ -176,7 +176,7 @@
 			data.date = Date();
 
 			str = "<strong>ED:</strong> "+text[index][0]+"<hr><strong>Inpatient:</strong> "+text[index][1];
-			if(parseInt(box1.value) > 539){
+			if(parseInt(box1.value) > 539 && data.code.color != "red"){
 				str+="<br> Call Admin Director <br>Implement Code Help <br>1.   Hallway beds <br>2.  Once a room is vacant and the bed is assigned, the Unit Assistant from that floor will go to the ED to retrieve the patient.  This is not necessary in the PACU as they have their own transporters. <br>3. The Hospitality Center is to be maximized.  The only ineligible patients are those on isolation. <br>4.  All telemetry patients are to be reviewed for appropriateness of order. <br>5.  All Psych COs are to be reviewed for medical clearance and transfer to IP psych. <br>6.  CTIC will not move patients to ICTU without the approval of their Director."
 			}
 			str += "<hr><strong>Express Care:</strong> "+text[index][2]+"<hr><strong>Comm Center:</strong> "+text[index][3];
@@ -203,7 +203,7 @@
 			var email = prompt("Email address:");
 			if(validateEmail(email)){
 				var report = result.innerHTML;
-					report = "alert level: "+data.code.color+" <br><hr>" + report;
+					report = "alert level: "+data.code.color+": "+data.code.total+" <br><hr>" + report;
 
 				var body = "";
 					body += "AM hospital census: "+data.box0+"<br>";

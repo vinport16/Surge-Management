@@ -188,9 +188,14 @@
 				socket.emit('saveLog', data);
 			}
 		}
+
 		socket.emit("census");
+
 		socket.on("census", function(num){
-			box1.value=num;
+			box1.value=num.census;
+			if((new Date()).getHours() >= 13 && num.arrivals != 0){
+				arrivals2.value = num.arrivals;
+			}
 		});
 
 		function validateEmail(email) { //regex taken from internet, not sure what's going on here

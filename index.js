@@ -185,7 +185,7 @@ io.on("connection", function(socket){ //Save data entry to db
 		get_db(function(content){
 			if(content[0] != undefined){
 				if(Date().substring(0,10) === content[content.length-1].date.substring(0,10)){
-					socket.emit("census",content[content.length-1].box0);
+					socket.emit("census",{census:content[content.length-1].box0, arrivals:content[content.length-1].box2});
 				}
 			}
 		});

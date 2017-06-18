@@ -49,24 +49,25 @@
 
 		<input type="number" min="0" id="5beds" ><br> number of admissions without assigned beds <hr> <!-- 5 or more -->
 
-		<input type="number" min="0" id="5lessbeds" ><br> number of ICU beds (not including CTIC or ICCU*) <hr> <!-- 5 or less -->
+		<input type="number" min="0" id="5lessbeds" ><br> number of ICU beds (not including CTIC or ICCU) <hr> <!-- 5 or less -->
 
 		<input type="number" min="0" id="25waiting" ><br> number of people waiting (ambulance & public) <hr> <!-- 25 or more -->
 
 		<input type="number" min="0" id="wait" step=0.1><br> longest wait (hours) (ambulance or public) <hr> <!-- 2.5 hours or more -->
 
-		<input type="number" min="0" id="5esi" ><br> number of ESI 2 not bedded* <hr> <!-- 5 or more -->
+		<input type="number" min="0" id="5esi" ><br> number of ESI 2 not bedded <hr> <!-- 5 or more -->
 
-		<input type="number" min="0" id="10patients" ><br> number of critical care patients* <hr><br> <!-- 10 or more -->
+		<input type="number" min="0" id="10patients" ><br> number of critical care patients <hr><br> <!-- 10 or more -->
 
 	</div>
 	<div style="width: 10%">
-		<button onclick="calculate()" style="height:30px"> Calculate
+	
+		<button onclick="calculate()" style="height:30px"> Calculate and save to Log
 		</button>
-		<br><br>
-		<button onclick="saveLog()" style="height:30px"> Save to Log
-		</button>
-		<br><br>
+		<br>
+		<div id="score"></div>
+		
+		<br>
 		
 		<form method="post" action="/data">
 			<input type='password' style="width:0; visibility:hidden" name="pass" value="aec2.0">
@@ -118,11 +119,10 @@
 					code:null,
 					date:null};
 
+		var score = document.getElementById("score");
 		var result = document.getElementById("result");
 
 		var style = "margin:auto; padding:5px; border-style: solid; border-width:5px; border-radius:6px; background-color:DDEEFF;";
-		
-		calculate();
 
 		if((new Date()).getHours() < 13){
 			arrivals2.disabled = true;
@@ -181,6 +181,10 @@
 			}
 			str += "<hr><strong>Express Care:</strong> "+text[index][2]+"<hr><strong>Comm Center:</strong> "+text[index][3];
 			result.innerHTML = str;
+
+			score.innerHTML = "Score: "+data.code.total;
+
+			saveLog();
 		}
 
 		function saveLog(){

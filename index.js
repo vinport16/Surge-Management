@@ -250,7 +250,7 @@ io.on("connection", function(socket){ //Save data entry to db
 			"longest wait (hours) (ambulance or public), "+
 			"ESI 2 not bedded*, "+
 			"critical care patients*, "+
-			"code, "+
+			"total score, "+
 			"color,\n";
 
 			get_db(function(content){
@@ -286,7 +286,19 @@ io.on("connection", function(socket){ //Save data entry to db
 
 add_to_db = function(data){
   pg.connect(connectionString, function(err, client, done) {
-    client.query("INSERT INTO data (date, box0, box1, box2, box3, box4, box5, box6, box7, box8, total, color) VALUES ('"+data.date+"', "+
+  	check = true;
+  	check = check && data.box0 != '';
+  	check = check && data.box1 != '';
+  	check = check && data.box2 != '';
+  	check = check && data.box3 != '';
+  	check = check && data.box4 != '';
+  	check = check && data.box5 != '';
+  	check = check && data.box6 != '';
+  	check = check && data.box7 != '';
+  	check = check && data.box8 != '';
+
+  	if(check){
+  		client.query("INSERT INTO data (date, box0, box1, box2, box3, box4, box5, box6, box7, box8, total, color) VALUES ('"+data.date+"', "+
     	data.box0+", "+
     	data.box1+", "+
     	data.box2+", "+
@@ -298,10 +310,15 @@ add_to_db = function(data){
     	data.box8+", "+
     	data.code.total+", '"+
     	data.code.color+"')"   , function(err, result) {
-      done();
-      if (err)
-       { console.error(err); response.send("Error " + err); }
-    });
+      	done();
+      	if (err)
+       		{ console.log("Error " + err); }
+    	});
+  	}else{
+  		console.log("some data is undefined, cannot store in db");
+  	}
+  	
+    
   });
 }
 

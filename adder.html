@@ -65,11 +65,11 @@
 		<input type="number" min="0" id="10patients" ><br> number of critical care patients <hr><br> <!-- 10 or more -->
 
 	</div>
-	<div style="width: 70%">
+	<div style="width: 100%">
 	
-		<button onclick="calculate()" id="savelog" style="height:30px; width:auto; display: inline-block;"> Calculate and save to Log</button><div class="divider"></div><div style="height:auto; display:inline-block; font-size:18px;" id="directionMessage"></div>
+		<button onclick="calculate()" id="savelog" style="height:30px; width:auto; display: inline-block;"> Calculate and save to Log</button><div class="divider"></div><div style="width:auto; display: inline-block;" id="score"></div><div class="divider"></div><div style="height:auto; display:inline-block; font-size:18px;" id="directionMessage"></div>
 		<br>
-		<div id="score"></div>
+		
 		
 		<br>
 		<button onclick="undo()" id="undo" disabled=true style="height:30px"> Undo </button> <div class="divider"></div>
@@ -126,6 +126,8 @@
 					box8:box8.value,
 					code:null,
 					date:null};
+
+		var calculated = false;
 
 		var score = document.getElementById("score");
 		var result = document.getElementById("result");
@@ -210,6 +212,7 @@
 			if(check){
 				if(confirm("Confirm Save")){
 					socket.emit('saveLog', data);
+					calculated = true;
 					disable_buttons();
 
 					arrivals1.style = "";
@@ -224,10 +227,9 @@
 
 					document.getElementById("savelog").disabled = true;
 					document.getElementById("undo").disabled = false;
-					document.getElementById("directionMessage").innerHTML = "<font color='"+data.code.color+"'>See instructions below</font>";
+					document.getElementById("directionMessage").innerHTML = "Status "+data.code.color+": <font color='"+data.code.color+"'>See suggested actions below</font>";
 				}
 			}else{
-				alert("Some fields are empty.\nEnter data for fields in red.");
 				if(arrivals1.value == ''){arrivals1.style = "border-color:red;";}
 				if(arrivals2.value == ''){arrivals2.style = "border-color:red;";}
 				if(box1.value == ''){box1.style = "border-color:red;";}
@@ -237,6 +239,7 @@
 				if(box6.value == ''){box6.style = "border-color:red;";}
 				if(box7.value == ''){box7.style = "border-color:red;";}
 				if(box8.value == ''){box8.style = "border-color:red;";}
+				alert("Some fields are empty.\nClick ok to see incomplete fields.");
 			}
 		}
 
@@ -252,6 +255,8 @@
 			box6.disabled = false;
 			box7.disabled = false;
 			box8.disabled = false;
+
+			calculated = false;
 
 			document.getElementById("savelog").disabled = false;
 			document.getElementById("undo").disabled = true;
@@ -306,13 +311,13 @@
 		}
 
 		function send_email(){
-			calculate();
-			var email = prompt("Email address:");
-			if(validateEmail(email)){
-				var report = result.innerHTML;
+			if(calculated){
+				var email = prompt("Email address:");
+				if(validateEmail(email)){
+					var report = result.innerHTML;
 					report = "alert level: "+data.code.color+": "+data.code.total+" <br><hr>" + report;
 
-				var body = "";
+					var body = "";
 					body += "AM hospital census: "+data.box0+"<br>";
 					body += "arrivals in three hours: "+data.box1+"<br>";
 					body += "pt arrivals by 1pm: "+data.box2+"<br>";
@@ -323,12 +328,16 @@
 					body += "ESI 2 not bedded*: "+data.box7+"<br>";
 					body += "critical care patients*: "+data.box8;
 
-				report = report + "<br><hr>" + body
+					report = report + "<br><hr>" + body
 
-				socket.emit("email_report", email, report);
+					socket.emit("email_report", email, report);
+				}else{
+					alert("Invalid email");
+				}
 			}else{
-				alert("Invalid email");
+				alert("Calculate and save first");
 			}
+			
 			
 		}
 

@@ -77,7 +77,7 @@
 		<br>
 		<br>
 		
-		<form method="post" action="/data">
+		<form method="post" action="/data" target="_blank">
 			<input type='password' style="width:0; visibility:hidden" name="pass" value="aec2.0">
 			<button type="submit" value="Submit" style="height:30px"> View Log </button>
     	</form>
@@ -244,23 +244,25 @@
 		}
 
 		function undo(){
-			socket.emit("delete");
+			if(confirm("This will remove your entry to the log")){
+				socket.emit("delete");
 
-			arrivals1.disabled = false;
-			arrivals2.disabled = false;
-			box1.disabled = false;
-			box3.disabled = false;
-			box4.disabled = false;
-			box5.disabled = false;
-			box6.disabled = false;
-			box7.disabled = false;
-			box8.disabled = false;
+				arrivals1.disabled = false;
+				arrivals2.disabled = false;
+				box1.disabled = false;
+				box3.disabled = false;
+				box4.disabled = false;
+				box5.disabled = false;
+				box6.disabled = false;
+				box7.disabled = false;
+				box8.disabled = false;
 
-			calculated = false;
+				calculated = false;
 
-			document.getElementById("savelog").disabled = false;
-			document.getElementById("undo").disabled = true;
-			document.getElementById("clear").disabled = false;
+				document.getElementById("savelog").disabled = false;
+				document.getElementById("undo").disabled = true;
+				document.getElementById("clear").disabled = false;
+			}
 		}
 
 		function clearvals(){

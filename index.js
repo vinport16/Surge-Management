@@ -158,7 +158,7 @@ io.on("connection", function(socket){ //Save data entry to db
 						send = true;
 					}
 					if(send){
-						var body = "";
+						var body = "score "+data.code.total+"\n";
 							body += "IPD "+data.box0+"\n";
 							body += "arr/3hrs "+data.box1+"\n";
 							body += "arr by 1P "+data.box2+"\n";

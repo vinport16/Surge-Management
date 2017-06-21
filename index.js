@@ -192,6 +192,15 @@ io.on("connection", function(socket){ //Save data entry to db
 
 	});
 
+	socket.on("times",function(){
+		get_db(function(content){
+			if(content[0] != undefined){
+				
+				socket.emit("times",{score:content[content.length-1].color, scoretime:content[content.length-1].date});
+			}
+		});
+	})
+
 	socket.on("email_report", function(email, report){
 		let transporter = nodemailer.createTransport({
 			service: 'gmail',

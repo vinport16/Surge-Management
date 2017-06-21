@@ -34,7 +34,7 @@
     	</form>
     	<br><br>
     	<button style="height:30px; float:right;" onclick="
-    		if(confirm('Confirm Delete: all changes are permanent')){
+    		if(confirm('Confirm Delete: This will delete the last calculation from the log. All changes are permanent.')){
     			socket.emit('delete');
     		}
     	">Delete last input</button>
@@ -44,7 +44,9 @@
 			<button type="submit" value="Submit" style="height:30px"> Edit contact info (admin only)</button>
     	</form>
 	</div>
-	<br><br>
+	<br>
+	<div id="times" style="text-align:center;"></div>
+	<br>
 	<div style="width:auto; display:inline-block;">
 		<input type="number" min="0" id="census"><br> AM hospital census <hr> <!-- 540 or more -->
 
@@ -305,6 +307,32 @@
 			if((new Date()).getHours() >= 13 && num.arrivals != 0){
 				arrivals2.value = num.arrivals;
 			}
+		});
+
+		socket.emit("times");
+
+		socket.on("times", function(times){
+			var scoretime = new Date(times.scoretime);
+			var newtext = "Last score: <font color='"+times.score+"'>"+times.score+"</font> (@ "+scoretime.getHours()+":"+scoretime.getMinutes()+")<br>Recalculate in ";
+			var wait = 0;
+			if(times.score == "green"){
+				wait = 4;
+			}else if(times.score == "yellow"){
+				wait = 3;
+			}else if(times.score == "red"){
+				wait = 2;
+			}else{
+				wait = 4;
+			}
+
+			var nextcheck = new Date(times.scoretime).setHours(scoretime.getHours()+wait);
+			console.log(nextcheck);
+			var timeuntil = parseInt((nextcheck - (new Date()).getTime())/1000/60);
+
+			newtext += "" + timeuntil + " minutes (@ "+(new Date(nextcheck)).getHours()+":"+(new Date(nextcheck)).getMinutes()+")";
+
+			document.getElementById("times").innerHTML = newtext;
+
 		});
 
 		function validateEmail(email) { //regex taken from internet, not sure what's going on here

@@ -12,6 +12,11 @@
 		    -webkit-appearance: none;
     		margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
 		}
+		div.divider{
+   			width:10px;
+    		height:auto;
+    		display:inline-block;
+		}
 		
 		body{
 			font-family:"Arial";
@@ -60,13 +65,16 @@
 		<input type="number" min="0" id="10patients" ><br> number of critical care patients <hr><br> <!-- 10 or more -->
 
 	</div>
-	<div style="width: 10%">
+	<div style="width: 70%">
 	
-		<button onclick="calculate()" style="height:30px"> Calculate and save to Log
-		</button>
+		<button onclick="calculate()" id="savelog" style="height:30px; width:auto; display: inline-block;"> Calculate and save to Log</button><div class="divider"></div><div style="height:auto; display:inline-block; font-size:18px;" id="directionMessage"></div>
 		<br>
 		<div id="score"></div>
 		
+		<br>
+		<button onclick="undo()" id="undo" disabled=true style="height:30px"> Undo </button> <div class="divider"></div>
+		<button onclick="clearvals()" id="clear" style="height:30px"> Clear </button>
+		<br>
 		<br>
 		
 		<form method="post" action="/data">
@@ -188,9 +196,99 @@
 		}
 
 		function saveLog(){
-			if(confirm("Confirm Save")){
-				socket.emit('saveLog', data);
+			check = true;
+			check = check && data.box0 != '';
+			check = check && data.box1 != '';
+			check = check && data.box2 != '';
+			check = check && data.box3 != '';
+			check = check && data.box4 != '';
+			check = check && data.box5 != '';
+			check = check && data.box6 != '';
+			check = check && data.box7 != '';
+			check = check && data.box8 != '';
+
+			if(check){
+				if(confirm("Confirm Save")){
+					socket.emit('saveLog', data);
+					disable_buttons();
+
+					arrivals1.style = "";
+					arrivals2.style = "";
+					box1.style = "";
+					box3.style = "";
+					box4.style = "";
+					box5.style = "";
+					box6.style = "";
+					box7.style = "";
+					box8.style = "";
+
+					document.getElementById("savelog").disabled = true;
+					document.getElementById("undo").disabled = false;
+					document.getElementById("directionMessage").innerHTML = "<font color='"+data.code.color+"'>See instructions below</font>";
+				}
+			}else{
+				alert("Some fields are empty.\nEnter data for fields in red.");
+				if(arrivals1.value == ''){arrivals1.style = "border-color:red;";}
+				if(arrivals2.value == ''){arrivals2.style = "border-color:red;";}
+				if(box1.value == ''){box1.style = "border-color:red;";}
+				if(box3.value == ''){box3.style = "border-color:red;";}
+				if(box4.value == ''){box4.style = "border-color:red;";}
+				if(box5.value == ''){box5.style = "border-color:red;";}
+				if(box6.value == ''){box6.style = "border-color:red;";}
+				if(box7.value == ''){box7.style = "border-color:red;";}
+				if(box8.value == ''){box8.style = "border-color:red;";}
 			}
+		}
+
+		function undo(){
+			socket.emit("delete");
+
+			arrivals1.disabled = false;
+			arrivals2.disabled = false;
+			box1.disabled = false;
+			box3.disabled = false;
+			box4.disabled = false;
+			box5.disabled = false;
+			box6.disabled = false;
+			box7.disabled = false;
+			box8.disabled = false;
+
+			document.getElementById("savelog").disabled = false;
+			document.getElementById("undo").disabled = true;
+			document.getElementById("clear").disabled = false;
+		}
+
+		function clearvals(){
+			arrivals1.value = null;
+			box3.value = null;
+			box4.value = null;
+			box5.value = null;
+			box6.value = null;
+			box7.value = null;
+			box8.value = null;
+
+			arrivals1.style = "";
+			arrivals2.style = "";
+			box1.style = "";
+			box3.style = "";
+			box4.style = "";
+			box5.style = "";
+			box6.style = "";
+			box7.style = "";
+			box8.style = "";
+		}
+
+		function disable_buttons(){
+			arrivals1.disabled = true;
+			arrivals2.disabled = true;
+			box1.disabled = true;
+			box3.disabled = true;
+			box4.disabled = true;
+			box5.disabled = true;
+			box6.disabled = true;
+			box7.disabled = true;
+			box8.disabled = true;
+			document.getElementById("clear").disabled = true;
 		}
 
 		socket.emit("census");

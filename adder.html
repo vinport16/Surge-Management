@@ -315,7 +315,12 @@
 
 		socket.on("times", function(times){
 			var scoretime = new Date(times.scoretime);
-			var newtext = "Last score: <font color='"+times.score+"'>"+times.score+"</font> (@ "+scoretime.getHours()+":"+scoretime.getMinutes()+")<br>Recalculate in ";
+			var newtext = "Last score: <font color='"+times.score+"'>"+times.score+"</font> (@ "+scoretime.getHours()+":";
+			console.log((new Date(scoretime)).getMinutes());
+			if((new Date(scoretime)).getMinutes() < 10){
+				newtext += "0";
+			}
+			newtext += scoretime.getMinutes()+")<br>Recalculate in ";
 			var wait = 0;
 			if(times.score == "green"){
 				wait = 4;
@@ -331,7 +336,11 @@
 			console.log(nextcheck);
 			var timeuntil = parseInt((nextcheck - (new Date()).getTime())/1000/60);
 
-			newtext += "" + timeuntil + " minutes (@ "+(new Date(nextcheck)).getHours()+":"+(new Date(nextcheck)).getMinutes()+")";
+			newtext += "" + timeuntil + " minutes (@ "+(new Date(nextcheck)).getHours()+":";
+			if((new Date(nextcheck)).getMinutes() < 10){
+				newtext += "0";
+			}
+			newtext += (new Date(nextcheck)).getMinutes()+")";
 
 			document.getElementById("times").innerHTML = newtext;
 

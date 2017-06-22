@@ -303,9 +303,11 @@
 		socket.emit("census");
 
 		socket.on("census", function(num){
-			box1.value=num.census;
-			if((new Date()).getHours() >= 13 && num.arrivals != 0){
-				arrivals2.value = num.arrivals;
+			if(Date().substring(0,10) === num.date.substring(0,10)){
+				box1.value=num.census;
+				if((new Date()).getHours() >= 13 && num.arrivals != 0){
+					arrivals2.value = num.arrivals;
+				}
 			}
 		});
 

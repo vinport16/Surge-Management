@@ -144,6 +144,7 @@ io.on("connection", function(socket){ //Save data entry to db
 			console.log("can't log null code data");
 		}else{
 			add_to_db(data);
+			socket.emit("times",{score:data.code.color, scoretime:data.date});
 			get_contacts(function(contacts){
 				var level = data.code.color;
 				for(var i = 0; i < contacts.length; i++){
@@ -178,7 +179,15 @@ io.on("connection", function(socket){ //Save data entry to db
 	});
 
 	socket.on("delete", function(){
-		delete_last_entry();
+		delete_last_entry(function(){
+			get_db(function(content){
+				if(content[0] != undefined){
+					
+					socket.emit("times",{score:content[content.length-1].color, scoretime:content[content.length-1].date});
+				}
+			});
+		});
+
 	});
 
 	socket.on("census",function(){
@@ -344,11 +353,12 @@ function get_db(callback){
   });
 }
 
-delete_last_entry = function(){
+function delete_last_entry(callback){
 	pg.connect(connectionString, function(err, client, done){
 		client.query("DELETE FROM data WHERE id=(SELECT MAX(id) FROM data)", function(err, result){
 			done();
 			if (err) console.log("Error: " + err);
+			callback();
 		});
 	});
 }

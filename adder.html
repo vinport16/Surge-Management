@@ -230,6 +230,7 @@
 					document.getElementById("savelog").disabled = true;
 					document.getElementById("undo").disabled = false;
 					document.getElementById("directionMessage").innerHTML = "Status "+data.code.color+": <font color='"+data.code.color+"'>See suggested actions below</font>";
+
 				}
 			}else{
 				if(arrivals1.value == ''){arrivals1.style = "border-color:red;";}
@@ -264,6 +265,8 @@
 				document.getElementById("savelog").disabled = false;
 				document.getElementById("undo").disabled = true;
 				document.getElementById("clear").disabled = false;
+
+				socket.emit("times");
 			}
 		}
 

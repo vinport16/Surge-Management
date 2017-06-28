@@ -9,23 +9,50 @@
 		input::-webkit-outer-spin-button,
 		input::-webkit-inner-spin-button {
     		/* display: none; <- Crashes Chrome on hover */
-		    -webkit-appearance: none;
+    		-webkit-appearance: none;
     		margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
-		}
-		div.divider{
-   			width:10px;
+    	}
+    	div.divider{
+    		width:10px;
     		height:auto;
     		display:inline-block;
-		}
-		
-		body{
-			font-family:"Arial";
-		}
-	</style>
+    	}
+
+    	body{
+    		font-family:"Arial";
+    	}
+
+    	.alert {
+    		padding: 1%;
+    		background-color: #f44336; 
+    		color: white;
+    		margin-bottom: 15px;
+    		width:98%;
+    	}
+
+    	.closebtn {
+    		margin-left: 15px;
+    		color: white;
+    		font-weight: bold;
+    		float: right;
+    		font-size: 22px;
+    		line-height: 20px;
+    		cursor: pointer;
+    		transition: 0.3s;
+    	}
+
+    	.closebtn:hover {
+    		color: black;
+    	}
+    </style>
 
 </head>
 
 <body bgcolor="CCDDEE">
+	<div class="alert" id="alert" align="center" style="display:none">
+  		<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+  		Some fields are empty. Incomplete fields are highlighted.
+	</div>
 
 	<div style="float:right;">
 		<form method="POST" action="/download" style="float:right;">
@@ -242,7 +269,9 @@
 				if(box6.value == ''){box6.style = "border-color:red;";}
 				if(box7.value == ''){box7.style = "border-color:red;";}
 				if(box8.value == ''){box8.style = "border-color:red;";}
-				alert("Some fields are empty.\nClick ok to see incomplete fields.");
+				//alert("Some fields are empty.\nClick ok to see incomplete fields.");
+				document.getElementById("alert").style.display = "inline-block";
+				window.scrollTo(0,0);
 			}
 		}
 

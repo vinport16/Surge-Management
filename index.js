@@ -244,7 +244,7 @@ io.on("connection", function(socket){ //Save data entry to db
 	});
 
 	socket.on("contact_update", function(contacts){
-		rewrite_contacts(contacts);
+		rewrite_contacts(contacts, socket);
 	});
 
 	app.post('/contacts', function(req, res){ 
@@ -376,7 +376,7 @@ function get_contacts(callback){
   	});
 }
 
-rewrite_contacts = function(data){
+rewrite_contacts = function(data, socket){
   pg.connect(connectionString, function(err, client, done) {
   	client.query("DELETE FROM contacts;", function(err, result){
   		if(err){
@@ -390,9 +390,12 @@ rewrite_contacts = function(data){
     				data[i].red+", "+
     				data[i].black+", "+
     				data[i].remind+");", function(err, result) {
+    				socket.emit("message", "Contacts changed successfully");
      			 	done();
-     			 if (err)
-     			  	{ console.log("Error " + err); }
+     				if (err){
+     					console.log("Error " + err);
+     					socket.emit("message", "ERROR IN CONTACTS FORMAT: potentially large problem. Contact administrator immediately");
+       				}
 			    });
   			}
   		}

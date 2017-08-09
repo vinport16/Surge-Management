@@ -366,7 +366,7 @@ function get_db(callback){
 
 function delete_last_entry(callback){
 	pg.connect(connectionString, function(err, client, done){
-		client.query("DELETE FROM data2 WHERE id=(SELECT MAX(id) FROM data)", function(err, result){
+		client.query("DELETE FROM data2 WHERE id=(SELECT MAX(id) FROM data2)", function(err, result){
 			done();
 			if (err) console.log("Error: " + err);
 			callback();

@@ -21,13 +21,13 @@ const client = new pg.Client(connectionString);
 client.connect();
 
 pg.connect(connectionString, function(err, client, done) {
-  client.query('CREATE TABLE IF NOT EXISTS data(id SERIAL PRIMARY KEY, date VARCHAR(60) not null, box0 INT, box1 INT, box2 INT, box3 INT, box4 INT, box5 INT, box6 INT, box7 INT, box8 INT, total INT, color VARCHAR(10))', function(err, result) {
+  client.query('CREATE TABLE IF NOT EXISTS data(id SERIAL PRIMARY KEY, date VARCHAR(60) not null, box0 INT, box1 INT, box2 INT, box3 INT, box4 INT, box5 INT, box6 INT, box7 INT, box8 INT, total INT, color VARCHAR(10), initials VARCHAR(3) )', function(err, result) {
     done();
   });
 });
 
 pg.connect(connectionString, function(err, client, done) {
-  client.query('CREATE TABLE IF NOT EXISTS contacts(id SERIAL PRIMARY KEY, email VARCHAR(60) not null, green BOOLEAN, yellow BOOLEAN, red BOOLEAN, black BOOLEAN, remind BOOLEAN)', function(err, result) {
+  client.query('CREATE TABLE IF NOT EXISTS contacts(id SERIAL PRIMARY KEY, email VARCHAR(60) not null, green BOOLEAN, yellow BOOLEAN, red BOOLEAN, black BOOLEAN)', function(err, result) {
     done();
   });
 });
@@ -115,6 +115,11 @@ app.post('/data', function(req, res){  //construct data table HTML
 
 				for(var i = content.length-1; i >= 0; i--){
 					html += "<td>"+content[i].total+"</td>";
+				}
+				html += "</tr><tr>";
+
+				for(var i = content.length-1; i >= 0; i--){
+					html += "<td>"+content[i].initials+"</td>";
 				}
 				html += "</tr><tr>";
 				
@@ -269,7 +274,8 @@ io.on("connection", function(socket){ //Save data entry to db
 			"ESI 2 not bedded*, "+
 			"critical care patients*, "+
 			"total score, "+
-			"color,\n";
+			"color,"+
+			"initials\n";
 
 			get_db(function(content){
 
@@ -285,7 +291,8 @@ io.on("connection", function(socket){ //Save data entry to db
 					content[i].box7+", "+
 					content[i].box8+", "+
 					content[i].total+", "+
-					content[i].color+", \n";
+					content[i].color+", "+
+					content[i].initials+"\n";
 				}
 
 				fs.writeFile ("generated.csv", text, function(err) { //write data back into file
@@ -314,9 +321,12 @@ add_to_db = function(data){
   	check = check && data.box6 != '';
   	check = check && data.box7 != '';
   	check = check && data.box8 != '';
+  	if(data.initials == ''){
+  		data.initials = "---";
+  	}
 
   	if(check){
-  		client.query("INSERT INTO data (date, box0, box1, box2, box3, box4, box5, box6, box7, box8, total, color) VALUES ('"+data.date+"', "+
+  		client.query("INSERT INTO data (date, box0, box1, box2, box3, box4, box5, box6, box7, box8, total, color, initials) VALUES ('"+data.date+"', "+
     	data.box0+", "+
     	data.box1+", "+
     	data.box2+", "+
@@ -327,7 +337,8 @@ add_to_db = function(data){
     	data.box7+", "+
     	data.box8+", "+
     	data.code.total+", '"+
-    	data.code.color+"')"   , function(err, result) {
+    	data.code.color+"', '"+
+    	data.initials.substring(0,3)+"')"   , function(err, result) {
       	done();
       	if (err)
        		{ console.log("Error " + err); }
@@ -384,12 +395,11 @@ rewrite_contacts = function(data, socket){
   		}else{
   			data = JSON.parse(data);
   			for(var i = 0; i < data.length; i++){
-  				client.query("INSERT INTO contacts (email, green, yellow, red, black, remind) VALUES ('"+data[i].email+"', "+
+  				client.query("INSERT INTO contacts (email, green, yellow, red, black) VALUES ('"+data[i].email+"', "+
     				data[i].green+", "+
     				data[i].yellow+", "+
     				data[i].red+", "+
-    				data[i].black+", "+
-    				data[i].remind+");", function(err, result) {
+    				data[i].black+");", function(err, result) {
     				socket.emit("message", "Contacts changed successfully");
      			 	done();
      				if (err){

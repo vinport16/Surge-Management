@@ -91,7 +91,9 @@
 
 		<input type="number" min="0" id="5esi" ><br> number of ESI 2 not bedded <hr> <!-- 5 or more -->
 
-		<input type="number" min="0" id="10patients" ><br> number of critical care patients <hr><br> <!-- 10 or more -->
+		<input type="number" min="0" id="10patients" ><br> number of critical care patients <hr> <!-- 10 or more -->
+
+		<input type="text" maxlength="3" id="initials" ><br> initials <hr><br>
 
 	</div>
 	<div style="width: 100%">
@@ -143,6 +145,7 @@
 		var box6 = document.getElementById("wait");
 		var box7 = document.getElementById("5esi");
 		var box8 = document.getElementById("10patients");
+		var initials = document.getElementById("initials");
 
 		var data = {box0:box1.value,
 					box1:arrivals1.value,
@@ -154,7 +157,8 @@
 					box7:box7.value,
 					box8:box8.value,
 					code:null,
-					date:null};
+					date:null,
+					initials:null};
 
 		var calculated = false;
 
@@ -192,6 +196,7 @@
 			data.box6 = box6.value;
 			data.box7 = box7.value;
 			data.box8 = box8.value;
+			data.initials = initials.value;
 
 			console.log(sum);
 			var index = 0;

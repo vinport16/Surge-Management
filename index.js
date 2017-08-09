@@ -21,13 +21,13 @@ const client = new pg.Client(connectionString);
 client.connect();
 
 pg.connect(connectionString, function(err, client, done) {
-  client.query('CREATE TABLE IF NOT EXISTS data(id SERIAL PRIMARY KEY, date VARCHAR(60) not null, box0 INT, box1 INT, box2 INT, box3 INT, box4 INT, box5 INT, box6 INT, box7 INT, box8 INT, total INT, color VARCHAR(10), initials VARCHAR(3) )', function(err, result) {
+  client.query('CREATE TABLE IF NOT EXISTS data2(id SERIAL PRIMARY KEY, date VARCHAR(60) not null, box0 INT, box1 INT, box2 INT, box3 INT, box4 INT, box5 INT, box6 INT, box7 INT, box8 INT, total INT, color VARCHAR(10), initials VARCHAR(3) )', function(err, result) {
     done();
   });
 });
 
 pg.connect(connectionString, function(err, client, done) {
-  client.query('CREATE TABLE IF NOT EXISTS contacts(id SERIAL PRIMARY KEY, email VARCHAR(60) not null, green BOOLEAN, yellow BOOLEAN, red BOOLEAN, black BOOLEAN)', function(err, result) {
+  client.query('CREATE TABLE IF NOT EXISTS contacts2(id SERIAL PRIMARY KEY, email VARCHAR(60) not null, green BOOLEAN, yellow BOOLEAN, red BOOLEAN, black BOOLEAN)', function(err, result) {
     done();
   });
 });
@@ -326,7 +326,7 @@ add_to_db = function(data){
   	}
 
   	if(check){
-  		client.query("INSERT INTO data (date, box0, box1, box2, box3, box4, box5, box6, box7, box8, total, color, initials) VALUES ('"+data.date+"', "+
+  		client.query("INSERT INTO data2 (date, box0, box1, box2, box3, box4, box5, box6, box7, box8, total, color, initials) VALUES ('"+data.date+"', "+
     	data.box0+", "+
     	data.box1+", "+
     	data.box2+", "+
@@ -353,7 +353,7 @@ add_to_db = function(data){
 
 function get_db(callback){
 	pg.connect(connectionString, function(err, client, done) {
-    client.query('SELECT * FROM data', function(err, result) {
+    client.query('SELECT * FROM data2', function(err, result) {
       done();
       if (err)
        { console.log("Error " + err); }
@@ -366,7 +366,7 @@ function get_db(callback){
 
 function delete_last_entry(callback){
 	pg.connect(connectionString, function(err, client, done){
-		client.query("DELETE FROM data WHERE id=(SELECT MAX(id) FROM data)", function(err, result){
+		client.query("DELETE FROM data2 WHERE id=(SELECT MAX(id) FROM data)", function(err, result){
 			done();
 			if (err) console.log("Error: " + err);
 			callback();
@@ -376,7 +376,7 @@ function delete_last_entry(callback){
 
 function get_contacts(callback){
 	pg.connect(connectionString, function(err, client, done) {
-    	client.query('SELECT * FROM contacts', function(err, result) {
+    	client.query('SELECT * FROM contacts2;', function(err, result) {
       		done();
       		if (err)
        			{ console.log("Error " + err); }
@@ -389,13 +389,13 @@ function get_contacts(callback){
 
 rewrite_contacts = function(data, socket){
   pg.connect(connectionString, function(err, client, done) {
-  	client.query("DELETE FROM contacts;", function(err, result){
+  	client.query("DELETE FROM contacts2;", function(err, result){
   		if(err){
   			console.log(err);
   		}else{
   			data = JSON.parse(data);
   			for(var i = 0; i < data.length; i++){
-  				client.query("INSERT INTO contacts (email, green, yellow, red, black) VALUES ('"+data[i].email+"', "+
+  				client.query("INSERT INTO contacts2 (email, green, yellow, red, black) VALUES ('"+data[i].email+"', "+
     				data[i].green+", "+
     				data[i].yellow+", "+
     				data[i].red+", "+
